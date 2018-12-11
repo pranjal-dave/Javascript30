@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Speed Scrubber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="wrapper">
+    <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" loop controls></video>
+    <p>Rate</p>
+    <div class="speed">
+      <div class="speed-bar">1×</div>
+    </div>
+    <p>Volume</p>
+    <div class="volume">
+        <div class="volume-bar">50%</div>
+      </div>
+  </div>
+
+<script>
+  const speed = document.querySelector('.speed');
+  const bar = document.querySelector('.speed-bar');
+  const volume = document.querySelector('.volume');
+  const volumeBar = document.querySelector('.volume-bar'); 
+  const video = document.querySelector('.flex');
+
+  function handleMove(e){
+
+    const x = e.pageX- this.offsetLeft;
+    percent = x/this.offsetWidth;
+    const max=3;
+    const min=0.4;
+    const rate = percent * (max-min)+min;
+    bar.style.width = Math.round(percent * 100) + '%';
+    bar.textContent = rate.toFixed(1) + 'x';
+    video.playbackRate = rate;
+  }
+
+  function handleVolume(e){
+    const x = e.pageX- this.offsetLeft;
+    percent = x/this.offsetWidth;
+    const max=1;
+    const min=0.1;
+    const VidVolume = percent * (max-min)+min;
+    volumeBar.style.width = Math.round(percent * 100) + '%';
+    volumeBar.textContent =  Math.round(percent * 100) + '%';
+    video.volume=VidVolume;
+
+  }
+
+  video.volume = 0.5;
+  speed.addEventListener('mousemove',handleMove); 
+  volume.addEventListener('mousemove',handleVolume);
+</script>
+</body>
+</html>

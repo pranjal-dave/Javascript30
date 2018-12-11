@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow</title>
+</head>
+<body>
+
+  <div class="hero">
+    <h1>Pranjal🔥</h1>
+  </div>
+
+  <style>
+  html {
+    color: red;
+    font-family: sans-serif;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(0,0,255,0.8);
+  }
+
+  h1 {
+    text-shadow: 10px 10px 0 rgba(0,0,0,0.3);
+    font-size: 100px;
+  }
+  </style>
+
+<script>
+
+    const hero = document.querySelector('.hero');
+    const text = hero.querySelector('h1');
+    const shadowLimit = 20;
+
+    hero.addEventListener('mousemove',shadow);
+
+    function shadow(e){
+
+        const width=hero.offsetWidth;
+        const height=hero.offsetHeight;
+
+        [x, y]=[e.offsetX, e.offsetY];
+
+        if(this!= e.target){
+            x += e.target.offsetLeft;
+            y+= e.target.offsetTop;
+        }
+
+    const xShadowLimit = Math.round((x / width * shadowLimit) - (shadowLimit / 2));
+    const yShadowLimit = Math.round((y / height * shadowLimit) - (shadowLimit / 2));
+
+    text.style.textShadow=`${xShadowLimit}px ${yShadowLimit}px 3px rgba(0,0,0,0.5)`;
+
+    }
+</script>
+</body>
+</html>

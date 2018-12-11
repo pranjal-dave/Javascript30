@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+  <script>
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+    var searchCityArray = [];
+    const cities = [];
+
+    fetch(endpoint).then(piece => piece.json()).then(data => cities.push(...data));
+
+    const searchText = document.querySelector('.search');
+    const suggest = document.querySelector('.suggestions');
+
+    searchText.addEventListener('keyup', displayName);
+
+    function displayName() {
+
+      if (this.value === '') {
+        suggest.innerHTML = `
+          <ul class="suggestions">
+          <li>Filter for a city</li>
+          <li>or a state</li>
+          </ul>`;
+      }
+      else {
+        searchCityArray = findMatches(this.value, cities);
+        if (searchCityArray.length == 0){
+
+          suggest.innerHTML = `
+          <ul class="suggestions">
+          <li>There is no city or state </li>
+          <li>that matches the search</li>
+          </ul>`;
+
+        } else {
+          const html = searchCityArray.map(place => {
+
+            const regex = new RegExp(this.value, 'gi');
+            const cityname = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+            const statename = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+
+            return `
+          <li>
+          <span class ="name">${cityname},${statename}</span>
+          <span class = "population">${numberWithCommas(place.population)}</span>
+          </li>
+          `;
+          }).join('');
+
+          suggest.innerHTML = html;
+        }
+      }
+    }
+
+    function numberWithCommas(x) {
+      x = x.toString();
+      var pattern = /(-?\d+)(\d{3})/;
+      while (pattern.test(x))
+        x = x.replace(pattern, "$1,$2");
+      return x;
+    }
+
+    function findMatches(searchString, cities) {
+
+      return cities.filter(place => {
+
+        const regex = new RegExp(searchString, 'gi');
+        return place.city.match(regex) || place.state.match(regex);
+
+      });
+    }
+
+  </script>
+</body>
+
+</html>
