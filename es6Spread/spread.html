@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+	<style type="text/css">
+
+
+	body {
+		margin: 0;
+		text-align: center;
+	}
+
+	.text {
+		font-size: 100px
+		margin: 0;
+		color: black;
+	}
+
+	span{
+	}
+
+	span:hover {
+		color:white;
+	}
+</style>
+
+<h2 class = "text">Spread</h2>
+
+<script type="text/javascript">
+
+	const text = document.querySelector('.text');
+	const textArray = [...text.textContent];
+
+	const SpanTextArray = textArray.map(char=>{
+		return `<span>${char}</span>`;
+	}).join('');
+
+	text.innerHTML = SpanTextArray;
+</script>
+
+</body>
+</html>
