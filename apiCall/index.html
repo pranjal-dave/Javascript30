@@ -6,32 +6,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Api Call Demo </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+    div{
+        display: inline-block;
+    }
+
+    </style>
 </head>
 
 <body>
 
-    <p class="div"><img class="img"></p>
-    <p class="div"><img class="img"></p>
-    <p class="div"><img class="img"></p>
-    <p class="div"><img class="img"></p>
-    <p class="div"><img class="img"></p>
-
     <input class="place" type="text"></input>
 
-    <button class="button">Submit</button>
+    <button class="button">Submit</button><br><br>
+
+    <div class="div"></div>  <img class="img">
+    <div class="div"></div>  <img class="img">
+    <div class="div"></div>  <img class="img">
+    <div class="div"></div>  <img class="img">
+    <div class="div"></div>  <img class="img">
 
     <script>
-        
-        
+
         const div = [...document.querySelectorAll('.div')];
-        const imgs = [...document.querySelectorAll('.img')];
+        const imgs = [...document.querySelectorAll('img')];
         const button = document.querySelector('.button');
         const place = document.querySelector('.place');
 
         const showData = async function () {
+            
+            div.forEach(div=>div.textContent = '');
+            const clientId = 'SLGZM1MPQD5DLDRUW5GUJS5MYNC2KPP0MSWU1YKE0LMN4A04';
+            const clientSecret = 'QTRRY0BIMYTWGV4RZOK5QL5VZFCI4JOTURVQ54KQ1REI4NC0';
 
-            const clientId = 'JAHN2UBEFZC1HZFO2WSYGUDASUJTQZPQOXWTZE5TO2NRYA3D';
-            const clientSecret = 'AEDNA53ZEIKYDPIN0ISTM32Y3VJX1ISCPQ2QSASYGLU4MCW4';
             const url = 'https://api.foursquare.com/v2/venues/explore?near='
             const urlForImage = 'https://api.foursquare.com/v2/venues/';
 
@@ -54,9 +62,16 @@
                     div[index].append(venue);
                 });
 
-                 imageUrls.forEach((imageUrl,index) => {
-                   setImages(imageUrl);
-                 });
+                imageUrls.forEach(async (imageUrl, index) => {
+
+                    const res = await fetch(imageUrl);
+                    const response = await res.json();
+
+                    const pic = response.response.photos.items[0].prefix + '200x200' + response.response.photos.items[0].suffix;
+
+                    imgs[index].src = pic;
+                
+                });
             }
             catch (err) {
                 div.forEach(d => d.innerHTML = '');
@@ -64,18 +79,6 @@
                 console.log(err);
             }
 
-        }
-
-        const setImages = async function(image) {
-            
-            try{
-            const response = await fetch(image).then(res=>res.json());
-            //const reply = await response.json();
-            console.log(response);
-            }
-            catch(err){console.log(err);}
-            return response.response.photos.items[0].prefix + '200x200' + reply.response.photos.items[0].suffix;
-            
         }
 
         button.addEventListener('click', showData);
