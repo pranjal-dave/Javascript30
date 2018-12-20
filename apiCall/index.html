@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Api Call Demo </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+    <p class="div"><img class="img"></p>
+    <p class="div"><img class="img"></p>
+    <p class="div"><img class="img"></p>
+    <p class="div"><img class="img"></p>
+    <p class="div"><img class="img"></p>
+
+    <input class="place" type="text"></input>
+
+    <button class="button">Submit</button>
+
+    <script>
+        
+        
+        const div = [...document.querySelectorAll('.div')];
+        const imgs = [...document.querySelectorAll('.img')];
+        const button = document.querySelector('.button');
+        const place = document.querySelector('.place');
+
+        const showData = async function () {
+
+            const clientId = 'JAHN2UBEFZC1HZFO2WSYGUDASUJTQZPQOXWTZE5TO2NRYA3D';
+            const clientSecret = 'AEDNA53ZEIKYDPIN0ISTM32Y3VJX1ISCPQ2QSASYGLU4MCW4';
+            const url = 'https://api.foursquare.com/v2/venues/explore?near='
+            const urlForImage = 'https://api.foursquare.com/v2/venues/';
+
+            const near = place.value;
+
+            const finalUrl = `${url}${near}&limit=5&v=20181219&client_id=${clientId}&client_secret=${clientSecret}`;
+
+            try {
+                const response = await fetch(finalUrl).then(r => r.json());
+                const venues = (response.response.groups[0].items).map(item => item.venue);
+                const venueIds = venues.map(venue => venue.id);
+
+                const imageUrls = venueIds.map(venueId => {
+                    return `${urlForImage}${venueId}/photos?client_id=${clientId}&client_secret=${clientSecret}&v=20181220&limit=1`;
+                });
+
+                const venueNames = venues.map(venue => venue.name);
+
+                venueNames.forEach((venue, index) => {
+                    div[index].append(venue);
+                });
+
+                 imageUrls.forEach((imageUrl,index) => {
+                   setImages(imageUrl);
+                 });
+            }
+            catch (err) {
+                div.forEach(d => d.innerHTML = '');
+                alert('Not found');
+                console.log(err);
+            }
+
+        }
+
+        const setImages = async function(image) {
+            
+            try{
+            const response = await fetch(image).then(res=>res.json());
+            //const reply = await response.json();
+            console.log(response);
+            }
+            catch(err){console.log(err);}
+            return response.response.photos.items[0].prefix + '200x200' + reply.response.photos.items[0].suffix;
+            
+        }
+
+        button.addEventListener('click', showData);
+
+    </script>
+</body>
+
+</html>
